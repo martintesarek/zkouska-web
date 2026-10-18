@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zkušební web – Martin Tesárek</title>
+<meta name="description" content="Zkušební web postavený přes Claude, hostovaný na Vercelu s databází v Supabase.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0f2342; --navy-2:#18325c; --gold:#c9a24b; --gold-2:#e3c27a;
+    --bg:#f6f4ef; --card:#ffffff; --text:#1b2433; --muted:#5d6676; --line:#e4e0d6;
+    --ok:#2f7d4f; --err:#b23b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Montserrat,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+  a{color:inherit}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+  header{background:var(--navy);color:#fff}
+  .nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
+  .logo{font-weight:700;letter-spacing:.04em}
+  .logo span{color:var(--gold)}
+  .nav a{text-decoration:none;font-weight:500;font-size:.95rem;border:1px solid var(--gold);padding:8px 16px;border-radius:999px;color:var(--gold-2)}
+  .hero{padding:70px 0 90px}
+  .badge{display:inline-block;background:rgba(201,162,75,.15);color:var(--gold-2);font-size:.8rem;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:18px}
+  h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.15;margin:0 0 18px;max-width:760px}
+  h1 em{font-style:normal;color:var(--gold)}
+  .hero p{font-size:1.1rem;color:#c8d0dd;max-width:620px;margin:0 0 30px}
+  .btn{display:inline-block;background:var(--gold);color:var(--navy);font-weight:700;text-decoration:none;padding:14px 28px;border-radius:10px;border:0;font:inherit;font-weight:700;cursor:pointer}
+  .btn:hover{background:var(--gold-2)}
+  section{padding:70px 0}
+  h2{font-size:1.9rem;margin:0 0 8px;color:var(--navy)}
+  .lead{color:var(--muted);margin:0 0 36px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+  .ph{height:170px;display:flex;align-items:flex-end;padding:14px;color:#fff;font-weight:600;font-size:.85rem}
+  .ph.a{background:linear-gradient(135deg,#2c4a7a,#0f2342)}
+  .ph.b{background:linear-gradient(135deg,#8a6d2f,#c9a24b)}
+  .ph.c{background:linear-gradient(135deg,#3d5a4a,#1e3a2e)}
+  .card .body{padding:20px;flex:1;display:flex;flex-direction:column}
+  .card h3{margin:0 0 4px;font-size:1.15rem;color:var(--navy)}
+  .loc{color:var(--muted);font-size:.9rem;margin:0 0 12px}
+  .tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .tags span{background:var(--bg);font-size:.8rem;padding:3px 10px;border-radius:6px}
+  .price{font-weight:700;font-size:1.25rem;color:var(--navy);margin-top:auto}
+  .card button{margin-top:14px;background:none;border:1px solid var(--navy);color:var(--navy);padding:10px;border-radius:8px;font:inherit;font-weight:600;cursor:pointer}
+  .card button:hover{background:var(--navy);color:#fff}
+  .form-sec{background:var(--navy);color:#fff}
+  .form-sec h2{color:#fff}
+  .form-sec .lead{color:#c8d0dd}
+  form{background:#fff;color:var(--text);border-radius:16px;padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:760px}
+  label{font-size:.85rem;font-weight:600;display:block;margin-bottom:6px}
+  input,select,textarea{width:100%;font:inherit;padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:#fbfaf7}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+  .full{grid-column:1/-1}
+  textarea{min-height:110px;resize:vertical}
+  .gdpr{font-size:.8rem;color:var(--muted);display:flex;gap:10px;align-items:flex-start}
+  .gdpr input{width:auto;margin-top:4px}
+  #status{font-weight:600;font-size:.95rem}
+  #status.ok{color:var(--ok)} #status.err{color:var(--err)}
+  footer{padding:30px 0;color:var(--muted);font-size:.85rem;text-align:center}
+  @media (max-width:640px){form{grid-template-columns:1fr;padding:20px}.hero{padding:50px 0 60px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="nav">
+      <div class="logo">MARTIN <span>TESÁREK</span></div>
+      <a href="#poptavka">Napište mi</a>
+    </div>
+    <div class="hero">
+      <div class="badge">Zkušební web · Claude + Vercel + Supabase</div>
+      <h1>Najdu vám domov na <em>jižní Moravě</em> i v Praze</h1>
+      <p>16 let zkušeností s prodejem nemovitostí. Ukázková nabídka níže je smyšlená, slouží k otestování webu a databáze.</p>
+      <a class="btn" href="#nabidka">Prohlédnout nabídku</a>
+    </div>
+  </div>
+</header>
+
+<section id="nabidka">
+  <div class="wrap">
+    <h2>Aktuální nabídka</h2>
+    <p class="lead">Ukázkové nemovitosti pro test. Kliknutím na „Mám zájem“ se nemovitost předvyplní do formuláře.</p>
+    <div class="grid">
+      <article class="card">
+        <div class="ph a">Ukázka</div>
+        <div class="body">
+          <h3>Byt 3+kk se zahrádkou</h3>
+          <p class="loc">Valtice</p>
+          <div class="tags"><span>78 m²</span><span>Novostavba</span><span>Parkování</span></div>
+          <div class="price">5 490 000 Kč</div>
+          <button data-prop="Byt 3+kk se zahrádkou, Valtice">Mám zájem</button>
+        </div>
+      </article>
+      <article class="card">
+        <div class="ph b">Ukázka</div>
+        <div class="body">
+          <h3>Rodinný dům s vinným sklepem</h3>
+          <p class="loc">Mikulov</p>
+          <div class="tags"><span>162 m²</span><span>Pozemek 640 m²</span><span>Sklep</span></div>
+          <div class="price">9 900 000 Kč</div>
+          <button data-prop="Rodinný dům s vinným sklepem, Mikulov">Mám zájem</button>
+        </div>
+      </article>
+      <article class="card">
+        <div class="ph c">Ukázka</div>
+        <div class="body">
+          <h3>Byt 2+1 po rekonstrukci</h3>
+          <p class="loc">Břeclav</p>
+          <div class="tags"><span>56 m²</span><span>Balkon</span><span>Sklep</span></div>
+          <div class="price">3 750 000 Kč</div>
+          <button data-prop="Byt 2+1 po rekonstrukci, Břeclav">Mám zájem</button>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="poptavka" class="form-sec">
+  <div class="wrap">
+    <h2>Napište mi</h2>
+    <p class="lead">Odeslaná zpráva se uloží do databáze Supabase.</p>
+    <form id="lead-form" novalidate>
+      <div>
+        <label for="name">Jméno a příjmení *</label>
+        <input id="name" name="name" required maxlength="120" autocomplete="name">
+      </div>
+      <div>
+        <label for="phone">Telefon</label>
+        <input id="phone" name="phone" type="tel" maxlength="30" autocomplete="tel">
+      </div>
+      <div>
+        <label for="email">E-mail *</label>
+        <input id="email" name="email" type="email" required maxlength="160" autocomplete="email">
+      </div>
+      <div>
+        <label for="interest">Mám zájem o</label>
+        <select id="interest" name="interest">
+          <option value="Koupě">Koupi nemovitosti</option>
+          <option value="Prodej">Prodej své nemovitosti</option>
+          <option value="Odhad ceny">Odhad ceny</option>
+          <option value="Jiné">Něco jiného</option>
+        </select>
+      </div>
+      <div class="full">
+        <label for="property">Nemovitost</label>
+        <input id="property" name="property" maxlength="200" placeholder="Např. byt 3+kk ve Valticích">
+      </div>
+      <div class="full">
+        <label for="message">Zpráva</label>
+        <textarea id="message" name="message" maxlength="2000"></textarea>
+      </div>
+      <label class="gdpr full"><input type="checkbox" id="consent" required> Souhlasím se zpracováním osobních údajů za účelem vyřízení poptávky.</label>
+      <div class="full" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+        <button class="btn" type="submit" id="submit">Odeslat poptávku</button>
+        <span id="status" role="status"></span>
+      </div>
+    </form>
+  </div>
+</section>
+
+<footer>© 2026 Martin Tesárek · zkušební web</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+  const SUPABASE_URL = "https://aqngfnvltkxgaboujnrm.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_kWh_cXjOjztZEjEa98zwdA_NVZ-unrV";
+  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  document.querySelectorAll('[data-prop]').forEach(b => b.addEventListener('click', () => {
+    document.getElementById('property').value = b.dataset.prop;
+    document.getElementById('interest').value = 'Koupě';
+    document.getElementById('poptavka').scrollIntoView({behavior:'smooth'});
+    setTimeout(() => document.getElementById('name').focus(), 500);
+  }));
+
+  const form = document.getElementById('lead-form');
+  const status = document.getElementById('status');
+  const submit = document.getElementById('submit');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    status.className = ''; status.textContent = '';
+    const f = new FormData(form);
+    const name = (f.get('name')||'').trim();
+    const email = (f.get('email')||'').trim();
+    if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      status.className = 'err'; status.textContent = 'Vyplňte prosím jméno a platný e-mail.'; return;
+    }
+    if (!document.getElementById('consent').checked) {
+      status.className = 'err'; status.textContent = 'Potvrďte prosím souhlas se zpracováním údajů.'; return;
+    }
+    submit.disabled = true; submit.textContent = 'Odesílám…';
+    const { error } = await db.from("test_poptavky").insert({
+      name, email,
+      phone: (f.get('phone')||'').trim() || null,
+      interest: f.get('interest'),
+      property: (f.get('property')||'').trim() || null,
+      message: (f.get('message')||'').trim() || null
+    });
+    submit.disabled = false; submit.textContent = 'Odeslat poptávku';
+    if (error) {
+      status.className = 'err'; status.textContent = 'Odeslání se nepovedlo, zkuste to prosím znovu.';
+      console.error(error);
+    } else {
+      form.reset();
+      status.className = 'ok'; status.textContent = 'Děkuji! Poptávka je uložená, ozvu se vám.';
+    }
+  });
+</script>
+</body>
+</html>
